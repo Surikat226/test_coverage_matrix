@@ -1,10 +1,18 @@
 from tabulate import tabulate
-import pytest
+from tests_data import TestsData
+
+data = TestsData()
+
 
 def main():
-    coverage_table = [
-        pytest.main(['.\\test_strings.py', '.\int_tests\\test2.py' '--collect-only'])
-    ]
+    test_matrix_info = data.collect_test_data()
+    table = tabulate(
+        tabular_data=test_matrix_info,
+        headers=['Наименование теста', 'Статус']
+    )
+    with open('coverage_matrix.txt', 'w', encoding='utf-8') as file:
+        file.write(table)
+    print(table)
 
 
 if __name__ == '__main__':
