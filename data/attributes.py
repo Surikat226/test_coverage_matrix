@@ -1,18 +1,21 @@
 from enum import StrEnum
 
 
-class TestAttributes(StrEnum):
+class MainAttributes(StrEnum):
     NAME = 'name'
     STATUS = 'status'
     FULL_NAME = 'fullName'
+    LABELS = 'labels'
+    LINKS = 'links'
 
 
-class TestLabels(StrEnum):
+class LabelTypes(StrEnum):
     EPIC = 'epic'
     FEATURE = 'feature'
     STORY = 'story'
     TAG = 'tag'
+    ID = 'as_id'
 
 
-class TestLinks(StrEnum):
-    pass
+class Links(StrEnum):
+    URL = 'url'

@@ -7,7 +7,8 @@ import allure
 class TestInts:
     @allure.feature("Сложение строк и чисел")
     @allure.story("Сложение хелловорлд и числа")
-    @allure.testcase('https://ratata.com/tc1')
+    @allure.id("3")
+    @allure.testcase('https://ratata.com/tc3')
     def test_hello_number(self):
         num = 5
         text = 'Hello, '
