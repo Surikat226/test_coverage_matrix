@@ -1,10 +1,10 @@
 import json
 import os
 from argparse import ArgumentParser
-from data.attributes import MainAttributes, LabelTypes, Links
+from data.test_attributes import MainAttributes, LabelTypes, Links
 
 # Сделать ввод директории с тестами через терминал
-default_allure_results_dir = './tests/allure-results'
+default_allure_results_dir = './example_tests/allure-results'
 
 attribute = MainAttributes
 label_type = LabelTypes
@@ -36,7 +36,7 @@ class TestsData:
         """
         all_tests_data = []
         for filename in os.listdir(allure_reports_dir):
-            test_info = []
+            test_info = {}
             with open(allure_reports_dir + '/' + filename, 'r', encoding='utf-8') as file:
                 file_data = json.load(file)
 
@@ -45,13 +45,27 @@ class TestsData:
                 test_status = file_data[attribute.STATUS]
                 test_link = file_data[attribute.LINKS][0][link.URL]
 
-                test_ierarchy = []
                 test_epic = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.EPIC))
                 test_feature = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.FEATURE))
                 test_story = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.STORY))
-                test_ierarchy.extend([test_epic, test_feature, test_story])
+                test_ierarchy = []
+                test_ierarchy.extend(
+                    [
+                        {
+                            'test_epic': test_epic,
+                            'test_feature': test_feature,
+                            'test_story': test_story
+                        }
+                    ]
+                )
 
-                test_info.extend([test_name, test_id, test_status, test_link, test_ierarchy])
+                test_info.update(
+                    test_name=test_name,
+                    test_id=test_id,
+                    test_status=test_status,
+                    test_link=test_link,
+                    test_ierarchy=test_ierarchy
+                )
             all_tests_data.append(test_info)
         return all_tests_data
 
