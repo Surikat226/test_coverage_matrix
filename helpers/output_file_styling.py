@@ -14,5 +14,5 @@ def align_cells_horizontally(filename: str, alignment: str = 'left'):
     wb.save(filename)
 
 
-def add_hyperlink_to_cell(filename: str, cell):
+def add_hyperlink_to_indexes(filename: str, cell):
     pass
