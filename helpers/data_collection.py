@@ -11,7 +11,7 @@ parser = ArgumentParser()
 parser.add_argument(
     'repdir',
     type=str,
-    help='Директория с allure-отчётами, на основе которой будет составлена матрица покрытия'
+    help='Директория с allure-отчётами, на основе которой будет составлена матрица покрытия',
 )
 args = parser.parse_args()
 
@@ -66,5 +66,6 @@ class PrepareData:
                     test_link=test_link,
                     test_ierarchy=test_ierarchy
                 )
+                test_info.update()
             all_tests_data.append(test_info)
         return all_tests_data

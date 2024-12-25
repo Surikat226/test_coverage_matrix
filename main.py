@@ -6,7 +6,6 @@ from helpers.data_collection import allure_reports_dir, sheet_name
 data = PrepareData()
 matrix_filename = 'output/coverage_matrix.xlsx'
 
-
 """
 Концепция:
 1. Сбор информации о тестах из json-файлов отчётов
@@ -25,16 +24,23 @@ matrix_filename = 'output/coverage_matrix.xlsx'
 def main():
     test_matrix_info = data.collect_test_data(allure_reports_dir)
 
-    df_data_massive, indexes, tc_links = list(), list(), list()
+    df_data_massive, rows, cols, tc_links = [], [], [], []
+    complete_data_massive = {}
 
     for i in range(len(test_matrix_info)):
         df_data_massive.append(test_matrix_info[i]['test_status'])
-        indexes.append(f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']}")
+
+        rows.append(f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']}")
         tc_links.append(test_matrix_info[i]['test_link'])
 
+        feature = test_matrix_info[i]['test_ierarchy'][0]['test_feature']
+        if feature not in cols:
+            cols.append(feature)
+
     df = pd.DataFrame(
-        df_data_massive,
-        index=indexes
+        data=complete_data_massive,
+        index=rows,
+        columns=cols
     )
     df.to_excel(matrix_filename, sheet_name=sheet_name)
 
