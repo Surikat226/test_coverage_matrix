@@ -1,18 +1,31 @@
+from dataclasses import dataclass
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from openpyxl.worksheet.hyperlink import Hyperlink
 
 
-def align_cells_horizontally(filename: str, alignment: str = 'left'):
-    wb = load_workbook(filename)
-    ws = wb.active
-    alignment = Alignment(horizontal=alignment)
-    for row in ws.iter_rows():
-        for cell in row:
-            cell.alignment = alignment
+@dataclass
+class ExcelStyling:
+    filename: str
 
-    wb.save(filename)
+    @property
+    def wb(self):
+        wb = load_workbook(self.filename)
+        return wb
 
+    @property
+    def ws(self):
+        ws = self.wb.active
+        return ws
 
-def add_hyperlink_to_indexes(filename: str, cell):
-    pass
+    def align_cells_horizontally(self, alignment: str = 'left'):
+        alignment = Alignment(horizontal=alignment)
+        for row in self.ws.iter_rows():
+            for cell in row:
+                cell.alignment = alignment
+
+        self.wb.save(self.filename)
+
+    def add_hyperlinks_to_indexes(self, indexes_list: list[str]):
+        link = Hyperlink()
+        pass

@@ -1,10 +1,11 @@
 import pandas as pd
 from helpers.data_collection import PrepareData
-from helpers.output_file_styling import align_cells_horizontally
+from helpers.output_file_styling import ExcelStyling
 from helpers.data_collection import allure_reports_dir, sheet_name
 
 data = PrepareData()
 matrix_filename = 'output/coverage_matrix.xlsx'
+styling = ExcelStyling(filename=matrix_filename)
 
 """
 Концепция:
@@ -24,12 +25,12 @@ matrix_filename = 'output/coverage_matrix.xlsx'
 def main():
     test_matrix_info = data.collect_test_data(allure_reports_dir)
 
-    rows, cols, cell_values, cell_positions, tc_links = [], [], [], [], []
+    indexes, cols, cell_values, cell_positions, tc_links = [], [], [], [], []
 
     for i in range(len(test_matrix_info)):
         # В качестве имени строки (индекса) делаем id + имя теста
-        row = f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']}"
-        rows.append(row)
+        index = f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']}"
+        indexes.append(index)
 
         # В качестве имени колонки делаем фичу теста
         col = test_matrix_info[i]['test_ierarchy'][0]['test_feature']
@@ -39,10 +40,10 @@ def main():
         cell_values.append(test_matrix_info[i]['test_status'])
         tc_links.append(test_matrix_info[i]['test_link'])
 
-        cell_positions.append([row, col])
+        cell_positions.append([index, col])
 
     df = pd.DataFrame(
-        index=rows,
+        index=indexes,
         columns=cols
     )
     for i in range(len(cell_positions)):
@@ -50,7 +51,8 @@ def main():
 
     df.to_excel(matrix_filename, sheet_name=sheet_name)
 
-    align_cells_horizontally(filename=matrix_filename)
+    styling.align_cells_horizontally()
+    print(indexes)
 
 
 if __name__ == '__main__':
