@@ -1,9 +1,10 @@
 import pandas as pd
-from helpers.data_collection import TestsData
+from helpers.data_collection import PrepareData
 from helpers.output_file_styling import align_cells_horizontally
+from helpers.data_collection import allure_reports_dir, sheet_name
 
-data = TestsData()
-matrix_filename = 'coverage_matrix.xlsx'
+data = PrepareData()
+matrix_filename = 'output/coverage_matrix.xlsx'
 
 
 """
@@ -22,20 +23,20 @@ matrix_filename = 'coverage_matrix.xlsx'
 
 
 def main():
-    test_matrix_info = data.collect_test_data()
+    test_matrix_info = data.collect_test_data(allure_reports_dir)
 
     df_data_massive, indexes, tc_links = list(), list(), list()
 
     for i in range(len(test_matrix_info)):
         df_data_massive.append(test_matrix_info[i]['test_status'])
-        indexes.append(test_matrix_info[i]['test_id'] + ' ' + test_matrix_info[i]['test_name'])
+        indexes.append(f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']}")
         tc_links.append(test_matrix_info[i]['test_link'])
 
     df = pd.DataFrame(
         df_data_massive,
         index=indexes
     )
-    df.to_excel(matrix_filename)
+    df.to_excel(matrix_filename, sheet_name=sheet_name)
 
     align_cells_horizontally(filename=matrix_filename)
 

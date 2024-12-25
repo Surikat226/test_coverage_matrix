@@ -3,41 +3,41 @@ import os
 from argparse import ArgumentParser
 from data.test_attributes import MainAttributes, LabelTypes, Links
 
-# Сделать ввод директории с тестами через терминал
-default_allure_results_dir = './example_tests/allure-results'
-
 attribute = MainAttributes
 label_type = LabelTypes
 link = Links
 
+parser = ArgumentParser()
+parser.add_argument(
+    'repdir',
+    type=str,
+    help='Директория с allure-отчётами, на основе которой будет составлена матрица покрытия'
+)
+args = parser.parse_args()
 
-# parser = ArgumentParser()
-# parser.add_argument(
-#     'repdir',
-#     type=str,
-#     help='Директория с allure-отчётами, на основе которой будет составлена матрица покрытия'
-# )
-# args = parser.parse_args()
-# print(args.repdir)
+# Получаем директорию с результатами тестов из терминала
+allure_reports_dir = os.path.dirname(args.repdir)
+# Берём имя директории на 1 уровень выше директории с результатами тестов и называем ей excel-лист
+sheet_name = os.path.basename(os.path.dirname(allure_reports_dir))
 
 
-class TestsData:
+class PrepareData:
+    @staticmethod
     def collect_test_data(
-        self,
-        allure_reports_dir: str = default_allure_results_dir
+        allure_reports_path: str
     ):
         """
         Собирает информацию о тестах, которая будет участвовать в матрице покрытия:
         (наименование тест-кейса и id кейса + гиперссылка на кейс) - строки,
         (название фичи) - столбцы,
         статус (зелёный/красный) - в ячейках
-        :param allure_reports_dir:
+        :param allure_reports_path:
         :return:
         """
         all_tests_data = []
-        for filename in os.listdir(allure_reports_dir):
+        for filename in os.listdir(allure_reports_path):
             test_info = {}
-            with open(allure_reports_dir + '/' + filename, 'r', encoding='utf-8') as file:
+            with open(allure_reports_dir + f'/{filename}', 'r', encoding='utf-8') as file:
                 file_data = json.load(file)
 
                 test_name = file_data[attribute.NAME]
@@ -68,6 +68,3 @@ class TestsData:
                 )
             all_tests_data.append(test_info)
         return all_tests_data
-
-    def prepare_coverage_data_for_matrix(self, service_name: str = None):
-        pass
