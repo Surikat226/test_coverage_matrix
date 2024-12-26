@@ -6,11 +6,11 @@ from openpyxl.worksheet.hyperlink import Hyperlink
 
 @dataclass
 class ExcelStyling:
-    filename: str
+    output_file_path: str
 
     @property
     def wb(self):
-        wb = load_workbook(self.filename)
+        wb = load_workbook(self.output_file_path)
         return wb
 
     @property
@@ -24,7 +24,7 @@ class ExcelStyling:
             for cell in row:
                 cell.alignment = alignment
 
-        self.wb.save(self.filename)
+        self.wb.save(self.output_file_path)
 
     def add_hyperlinks_to_indexes(self, indexes_list: list[str]):
         link = Hyperlink()

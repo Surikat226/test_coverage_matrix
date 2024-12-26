@@ -7,16 +7,22 @@ attribute = MainAttributes
 label_type = LabelTypes
 link = Links
 
-parser = ArgumentParser()
-parser.add_argument(
-    'repdir',
-    type=str,
-    help='Директория с allure-отчётами, на основе которой будет составлена матрица покрытия',
-)
-args = parser.parse_args()
+# TODO расскоментировать, когда код будет отдебажен
+# parser = ArgumentParser()
+# parser.add_argument(
+#     'repdir',
+#     type=str,
+#     help='Директория с allure-отчётами, на основе которой будет составлена матрица покрытия',
+# )
+# args = parser.parse_args()
 
 # Получаем директорию с результатами тестов из терминала
-allure_reports_dir = os.path.dirname(args.repdir)
+# allure_reports_dir = os.path.dirname(args.repdir)
+
+# Для отладки
+allure_reports_dir = os.path.dirname('./picker_billing/allure-results/')
+
+
 # Берём имя директории на 1 уровень выше директории с результатами тестов и называем ей excel-лист
 # TODO Возможно, sheet_name нужно брать из эпика
 sheet_name = os.path.basename(os.path.dirname(allure_reports_dir))
@@ -24,24 +30,22 @@ sheet_name = os.path.basename(os.path.dirname(allure_reports_dir))
 
 class PrepareData:
     @staticmethod
-    def collect_test_data(
-        allure_reports_path: str
-    ):
+    def collect_test_data(allure_reports_path_to_dir: str) -> list:
         """
         Собирает информацию о тестах, которая будет участвовать в матрице покрытия:
         (наименование тест-кейса и id кейса + гиперссылка на кейс) - строки,
         (название фичи) - столбцы,
         статус (зелёный/красный) - в ячейках
-        :param allure_reports_path:
+        :param allure_reports_path_to_dir:
         :return:
         """
         all_tests_data = []
-        for filename in os.listdir(allure_reports_path):
-            test_info = {}
-            if filename.endswith('.json'):
-                with open(allure_reports_dir + f'/{filename}', 'r', encoding='utf-8') as file:
+        for filename in os.listdir(allure_reports_path_to_dir):
+            if filename.endswith('result.json'):
+                test_info = {}
+                filepath = os.path.join(allure_reports_path_to_dir, filename)
+                with open(filepath, 'r', encoding='utf-8') as file:
                     file_data = json.load(file)
-
                     # TODO Как и ожидалось, на реальных данных сбор инфы сломался. Нужно отладить сбор на них
                     test_name = file_data[attribute.NAME]
                     test_id = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.ID))
@@ -69,6 +73,5 @@ class PrepareData:
                         test_link=test_link,
                         test_ierarchy=test_ierarchy
                     )
-                    test_info.update()
                 all_tests_data.append(test_info)
-            return all_tests_data
+        return all_tests_data

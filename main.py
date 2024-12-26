@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from helpers.data_collection import PrepareData
 from helpers.output_file_styling import ExcelStyling
@@ -5,8 +7,10 @@ from helpers.data_collection import allure_reports_dir, sheet_name
 
 data = PrepareData()
 # TODO если папки output не существует, то она и не создаётся. Нужно сделать так, чтобы она создавалась сама
-matrix_filename = 'output/coverage_matrix.xlsx'
-styling = ExcelStyling(filename=matrix_filename)
+output_dir_name = 'output'
+output_filename = 'coverage_matrix.xlsx'
+
+styling = ExcelStyling(output_file_path=f'{output_dir_name}/{output_filename}')
 
 """
 Концепция:
@@ -50,10 +54,10 @@ def main():
     for i in range(len(cell_positions)):
         df.loc[*cell_positions[i]] = cell_values[i]
 
-    df.to_excel(matrix_filename, sheet_name=sheet_name)
+    os.makedirs(output_dir_name, exist_ok=True)
+    df.to_excel(f'{output_dir_name}/{output_filename}', sheet_name=sheet_name)
 
     styling.align_cells_horizontally()
-    print(indexes)
 
 
 if __name__ == '__main__':
