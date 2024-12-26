@@ -4,6 +4,7 @@ from helpers.output_file_styling import ExcelStyling
 from helpers.data_collection import allure_reports_dir, sheet_name
 
 data = PrepareData()
+# TODO если папки output не существует, то она и не создаётся. Нужно сделать так, чтобы она создавалась сама
 matrix_filename = 'output/coverage_matrix.xlsx'
 styling = ExcelStyling(filename=matrix_filename)
 
