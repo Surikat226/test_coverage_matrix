@@ -45,13 +45,14 @@ class PrepareData:
                 test_info = {}
                 filepath = os.path.join(allure_reports_path_to_dir, filename)
                 with open(filepath, 'r', encoding='utf-8') as file:
+                    # TODO Реализовать обработку ошибок в случаях, когда не была найдена: ссылка, фича
                     file_data = json.load(file)
-                    # TODO Как и ожидалось, на реальных данных сбор инфы сломался. Нужно отладить сбор на них
                     test_name = file_data[attribute.NAME]
                     test_id = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.ID))
                     test_status = file_data[attribute.STATUS]
                     test_link = file_data[attribute.LINKS][0][link.URL]
 
+                    # TODO Подумать, действительно ли нужны эпик и стори. Если да, то как их скомпоновать в excel
                     test_epic = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.EPIC))
                     test_feature = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.FEATURE))
                     test_story = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.STORY))

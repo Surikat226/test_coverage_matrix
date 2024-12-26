@@ -6,7 +6,6 @@ from helpers.output_file_styling import ExcelStyling
 from helpers.data_collection import allure_reports_dir, sheet_name
 
 data = PrepareData()
-# TODO если папки output не существует, то она и не создаётся. Нужно сделать так, чтобы она создавалась сама
 output_dir_name = 'output'
 output_filename = 'coverage_matrix.xlsx'
 
@@ -28,6 +27,7 @@ styling = ExcelStyling(output_file_path=f'{output_dir_name}/{output_filename}')
 
 
 def main():
+    # TODO Рзнести логику по функциям, чтобы было не так громоздко и стало читабельно
     test_matrix_info = data.collect_test_data(allure_reports_dir)
 
     indexes, cols, cell_values, cell_positions, tc_links = [], [], [], [], []

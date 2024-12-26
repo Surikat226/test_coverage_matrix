@@ -29,3 +29,6 @@ class ExcelStyling:
     def add_hyperlinks_to_indexes(self, indexes_list: list[str]):
         link = Hyperlink()
         pass
+
+    def color_cell(self, color):
+        pass
