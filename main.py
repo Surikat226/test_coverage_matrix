@@ -1,15 +1,18 @@
 import os
-
 import pandas as pd
+
 from helpers.data_collection import PrepareData
 from helpers.output_file_styling import ExcelStyling
 from helpers.data_collection import allure_reports_dir, sheet_name
 
+from data.output_file_styling_data import Colors
+
 data = PrepareData()
 output_dir_name = 'output'
 output_filename = 'coverage_matrix.xlsx'
+output_file_path = os.path.join(output_dir_name, output_filename)
 
-styling = ExcelStyling(output_file_path=f'{output_dir_name}/{output_filename}')
+styling = ExcelStyling(output_file_path=output_file_path)
 
 """
 Концепция:
@@ -55,9 +58,11 @@ def main():
         df.loc[*cell_positions[i]] = cell_values[i]
 
     os.makedirs(output_dir_name, exist_ok=True)
-    df.to_excel(f'{output_dir_name}/{output_filename}', sheet_name=sheet_name)
+    df.to_excel(output_file_path, sheet_name=sheet_name)
 
     styling.align_cells_horizontally()
+    styling.color_cells_by_test_results()
+    styling.set_column_width()
 
 
 if __name__ == '__main__':

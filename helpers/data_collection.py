@@ -1,6 +1,5 @@
 import json
 import os
-from argparse import ArgumentParser
 from data.test_attributes import MainAttributes, LabelTypes, Links
 
 attribute = MainAttributes
@@ -20,7 +19,7 @@ link = Links
 # allure_reports_dir = os.path.dirname(args.repdir)
 
 # Для отладки
-allure_reports_dir = os.path.dirname('./picker_billing/allure-results/')
+allure_reports_dir = os.path.dirname('./billing_platform/allure-results/')
 
 
 # Берём имя директории на 1 уровень выше директории с результатами тестов и называем ей excel-лист
@@ -50,12 +49,14 @@ class PrepareData:
                     test_name = file_data[attribute.NAME]
                     test_id = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.ID))
                     test_status = file_data[attribute.STATUS]
-                    test_link = file_data[attribute.LINKS][0][link.URL]
+
+                    # test_link = file_data[attribute.LINKS][0][link.URL]
+                    test_link = file_data.get(attribute.LINKS, [{}])[0].get(link.URL, None)
 
                     # TODO Подумать, действительно ли нужны эпик и стори. Если да, то как их скомпоновать в excel
-                    test_epic = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.EPIC))
+                    test_epic = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.EPIC), 'Эпик отсутствует')
                     test_feature = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.FEATURE))
-                    test_story = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.STORY))
+                    test_story = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.STORY), 'Стори отсутствует')
                     test_ierarchy = []
                     test_ierarchy.extend(
                         [
