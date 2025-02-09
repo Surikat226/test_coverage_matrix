@@ -7,6 +7,7 @@ class MainAttributes(StrEnum):
     FULL_NAME = 'fullName'
     LABELS = 'labels'
     LINKS = 'links'
+    PARAMETERS = 'parameters'
 
 
 class LabelTypes(StrEnum):
@@ -15,6 +16,11 @@ class LabelTypes(StrEnum):
     STORY = 'story'
     TAG = 'tag'
     ID = 'as_id'
+
+
+class ParametersTypes(StrEnum):
+    PARAM = 'param'
+    VALUE = 'value'
 
 
 class Links(StrEnum):

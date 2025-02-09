@@ -1,10 +1,11 @@
 import json
 import os
-from data.test_attributes import MainAttributes, LabelTypes, Links
+from data.test_attributes import MainAttributes, LabelTypes, Links, ParametersTypes
 
 attribute = MainAttributes
 label_type = LabelTypes
 link = Links
+param = ParametersTypes
 
 # TODO расскоментировать, когда код будет отдебажен
 # parser = ArgumentParser()
@@ -47,6 +48,9 @@ class PrepareData:
                     # TODO Реализовать обработку ошибок в случаях, когда не была найдена: ссылка, фича
                     file_data = json.load(file)
                     test_name = file_data[attribute.NAME]
+                    test_parameters = file_data.get(attribute.PARAMETERS, [])
+                    test_param_name = next((i['value'] for i in test_parameters if i['name'] == param.PARAM), '')
+                    test_param_value = next((i['value'] for i in test_parameters if i['name'] == param.VALUE), '')
                     test_id = next((i['value'] for i in file_data[attribute.LABELS] if i['name'] == label_type.ID))
                     test_status = file_data[attribute.STATUS]
 
@@ -73,7 +77,8 @@ class PrepareData:
                         test_id=test_id,
                         test_status=test_status,
                         test_link=test_link,
-                        test_ierarchy=test_ierarchy
+                        test_ierarchy=test_ierarchy,
+                        test_param_summary=f'[параметры: {test_param_name} = {test_param_value}]' if test_parameters else ''
                     )
                 all_tests_data.append(test_info)
         return all_tests_data

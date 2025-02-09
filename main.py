@@ -12,8 +12,6 @@ output_dir_name = 'output'
 output_filename = 'coverage_matrix.xlsx'
 output_file_path = os.path.join(output_dir_name, output_filename)
 
-styling = ExcelStyling(output_file_path=output_file_path)
-
 """
 Концепция:
 1. Сбор информации о тестах из json-файлов отчётов
@@ -37,7 +35,7 @@ def main():
 
     for i in range(len(test_matrix_info)):
         # В качестве имени строки (индекса) делаем id + имя теста
-        index = f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']}"
+        index = f"#{test_matrix_info[i]['test_id']} {test_matrix_info[i]['test_name']} {test_matrix_info[i]['test_param_summary']}"
         indexes.append(index)
 
         # В качестве имени колонки делаем фичу теста
@@ -60,6 +58,7 @@ def main():
     os.makedirs(output_dir_name, exist_ok=True)
     df.to_excel(output_file_path, sheet_name=sheet_name)
 
+    styling = ExcelStyling(output_file_path=output_file_path)
     styling.align_cells_horizontally()
     styling.color_cells_by_test_results()
     styling.set_column_width()
